@@ -16,15 +16,17 @@ export default class Session {
       position: { x: this.width / 3, y: this.height / 3 },
     });
     this.batteries = [];
+    this.maxBatteries = 0;
 
     this.batteryTimer = 0;
-    this.batteryInterval = 3000;
+    this.batteryInterval = 5000;
   }
 
   update(deltaTime) {
     const spawnTimerElapsed = this.batteryTimer > this.batteryInterval;
+    const maxAmountOfBatteries = this.batteries.length > this.maxBatteries;
 
-    if (spawnTimerElapsed) {
+    if (spawnTimerElapsed && !maxAmountOfBatteries) {
       this.addBattery();
       this.batteryTimer = 0;
     } else {
