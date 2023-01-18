@@ -1,4 +1,5 @@
-import Agent from "./Agent.js";
+import Agent from "./Game/Agent.js";
+
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
