@@ -10,16 +10,28 @@ export default class Game {
   constructor(width, height) {
     this.hud = new Hud(this);
     this.supply = new Supply();
-    this.agent = new Agent(width * 0.5, height * 0.5, 0);
+    this.agent = new Agent(width * 0.5, height * 0.5, 1);
 
     this.batteries = [new Battery()];
     this.maxBatteries = 1;
 
-    this.buttons = [new Button(10)];
+    this.buttons = [
+      new Button("supply", 10, canvas.width*0.40, 20, "pink",this),
+      new Button("maxBatteries", 10, canvas.width*0.60, 20, "pink",this),
+    ];
 
     this.clicks = 0;
     this.spawnTimer = 0;
     this.spawnInterval = 2000;
+
+    this.upgrade = {
+      supply: () => (this.supply.gain *= 2),
+      maxBatteries: () => this.maxBatteries++,
+    };
+    this.current = {
+      supply: () => this.supply.gain,
+      maxBatteries: () => this.maxBatteries,
+    };
 
     window.addEventListener("click", (e) => {
       const x = e.clientX;
@@ -39,9 +51,9 @@ export default class Game {
       });
       this.buttons.forEach((button) => {
         if (Object.clicked(x, y, button)) {
-          if (this.clicks > button.cost(this.supply.gain)) {
-            this.clicks -= button.cost(this.supply.gain);
-            this.supply.gain *= 2;
+          if (this.clicks >= button.cost(this.current[button.name]())) {
+            this.clicks -= button.cost(this.current[button.name]());
+            this.upgrade[button.name]();
           }
         }
       });
