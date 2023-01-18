@@ -15,33 +15,42 @@ export default class Game {
     this.batteries = [new Battery()];
     this.maxBatteries = 1;
 
+    this.autoClick = 1;
+    this.autoClickTimer = 0;
+    this.autoClickInterval = 1000;
+
     this.buttons = [
-      new Button("supply", 10, canvas.width*0.40, 20, "pink",this),
-      new Button("maxBatteries", 10, canvas.width*0.60, 20, "pink",this),
+      new Button("supply", 25, canvas.width * 0.4, 20, "pink", this),
+      new Button("maxBatteries", 100, canvas.width * 0.6, 20, "pink", this),
+      new Button("autoClick", 1000, canvas.width * 0.8, 20, "pink", this),
     ];
 
     this.clicks = 0;
     this.spawnTimer = 0;
-    this.spawnInterval = 2000;
+    this.spawnInterval = 5000;
 
     this.upgrade = {
       supply: () => (this.supply.gain *= 2),
       maxBatteries: () => this.maxBatteries++,
+      autoClick: () => this.autoClick++,
     };
     this.current = {
       supply: () => this.supply.gain,
       maxBatteries: () => this.maxBatteries,
+      autoClick: () => this.autoClick,
+    };
+
+    this.click = () => {
+      this.agent.power += this.supply.gain;
+      this.clicks++;
     };
 
     window.addEventListener("click", (e) => {
       const x = e.clientX;
       const y = e.clientY;
-
       if (Object.clicked(x, y, this.supply)) {
-        this.agent.power += this.supply.gain;
-        this.clicks++;
+        this.click();
       }
-
       this.batteries.forEach((battery) => {
         if (Object.clicked(x, y, battery)) {
           battery.markedForDeletion = true;
@@ -60,6 +69,17 @@ export default class Game {
     });
   }
   update(deltaTime) {
+    const autoClickElapsed =
+      this.autoClickTimer > this.autoClickInterval && this.autoClick > 1;
+    if (autoClickElapsed) {
+      for (let i = 0; i < this.autoClick; i++) {
+        this.click();
+      }
+      this.autoClickTimer = 0;
+    } else {
+      this.autoClickTimer += deltaTime;
+    }
+
     const spawnTimerElapsed = this.spawnTimer > this.spawnInterval;
 
     if (spawnTimerElapsed) {
