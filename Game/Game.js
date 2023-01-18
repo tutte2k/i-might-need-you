@@ -4,17 +4,20 @@ import { Collision } from "../Utils/Helper.js";
 import Hud from "./Hud.js";
 
 export default class Game {
-  constructor(agentSkill) {
-    this.agent = new Agent(agentSkill);
+  constructor() {
+    this.agent = new Agent(0);
     this.batteries = [new Battery()];
     this.hud = new Hud(this);
   }
   update(deltaTime) {
+
     this.agent.update(deltaTime, this.batteries[0].x, this.batteries[0].y);
+
     this.batteries.forEach((target) => {
       if (Collision.check(this.agent, target)) {
         target.x = Math.random() * canvas.width;
         target.y = Math.random() * canvas.height;
+        this.agent.power+=500;
       }
     });
   }

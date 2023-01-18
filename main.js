@@ -8,7 +8,7 @@ canvas.height = window.innerHeight;
 
 window.addEventListener("load", () => {
   let lastTime = 0;
-  const game = new Game(0);
+  const game = new Game();
 
   function gameLoop(timeStamp) {
     const deltaTime = timeStamp - lastTime;
