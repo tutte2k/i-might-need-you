@@ -7,10 +7,6 @@ export default class Agent extends Object {
 
     this.power = 0;
     this.speed = 0;
-    window.addEventListener("click", () => {
-      this.power++;
-      console.log(this.power);
-    });
 
     this.actionTimer = 0;
     this.actionInterval = 100;
@@ -18,7 +14,6 @@ export default class Agent extends Object {
 
   update(deltaTime, batteryX, batteryY) {
     const actionTimerElapsed = this.actionTimer > this.actionInterval;
-
     if (this.power > 0 && actionTimerElapsed) {
       const dx = batteryX > this.x ? this.speed : -this.speed;
       const dy = batteryY > this.y ? this.speed : -this.speed;
@@ -31,7 +26,7 @@ export default class Agent extends Object {
         this.y += Math.random() < 0.5 ? -this.speed : this.speed;
       }
       this.skillLevel += this.power / 1000;
-      this.speed = this.power / 100;
+      this.speed = this.power / 100 < 9 ? this.power / 100 : 9;
       this.power--;
       this.actionTimer = 0;
     } else {
