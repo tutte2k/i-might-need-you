@@ -32,8 +32,10 @@ const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-let batteryX = Math.random() * 100;
-let batteryY = Math.random() * 100;
+const battery = {
+  x: Math.random() * canvas.width,
+  y: Math.random() * canvas.height,
+};
 
 const robot = {
   x: Math.random() * canvas.width,
@@ -59,8 +61,8 @@ const robot = {
 
     for (let i = 0; i < 4; i++) {
       let distance = Math.sqrt(
-        Math.pow(robot.x + dx[i] - batteryX, 2) +
-          Math.pow(robot.y + dy[i] - batteryY, 2)
+        Math.pow(robot.x + dx[i] - battery.x, 2) +
+          Math.pow(robot.y + dy[i] - battery.y, 2)
       );
       if (distance < minDistance) {
         minDistance = distance;
@@ -107,10 +109,20 @@ const runSimulation = async () => {
     robot.move(0, 1);
   }
 
-  if (robot.x === batteryX && robot.y === batteryY) {
+  function hasCollided(robot, battery) {
+    const size = 10;
+    return (
+      robot.x + size >= battery.x &&
+      robot.x <= battery.x + size &&
+      robot.y <= battery.y + size &&
+      robot.y + size >= battery.y
+    );
+  }
+
+  if (hasCollided(robot, battery)) {
     reward = 10;
-    batteryX = Math.random() * canvas.width;
-    batteryY = Math.random() * canvas.height;
+    battery.x = Math.random() * canvas.width;
+    battery.y = Math.random() * canvas.height;
   }
   if (
     robot.x <= 0 ||
@@ -122,22 +134,24 @@ const runSimulation = async () => {
   }
 
   nextLidar[0] =
-    Math.abs(robot.x - batteryX) < 10 ? 10 - Math.abs(robot.x - batteryX) : 0;
+    Math.abs(robot.x - battery.x) < 10 ? 10 - Math.abs(robot.x - battery.x) : 0;
   nextLidar[1] =
-    Math.abs(robot.y - batteryY) < 10 ? 10 - Math.abs(robot.y - batteryY) : 0;
+    Math.abs(robot.y - battery.y) < 10 ? 10 - Math.abs(robot.y - battery.y) : 0;
 
   await robot.update(lidar, action, nextLidar, reward);
 
   lidar = nextLidar;
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, canvas.width, 5);
   ctx.fillRect(0, 0, 5, canvas.height);
   ctx.fillRect(0, canvas.height - 5, canvas.width, 5);
   ctx.fillRect(canvas.width - 5, 0, 5, canvas.height);
+
   ctx.fillStyle = "red";
-  ctx.fillRect(batteryX, batteryY, 10, 10);
+  ctx.fillRect(battery.x, battery.y, 10, 10);
   ctx.fillStyle = "green";
   ctx.fillRect(robot.x, robot.y, 10, 10);
   requestAnimationFrame(runSimulation);
