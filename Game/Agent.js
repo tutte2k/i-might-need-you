@@ -9,7 +9,7 @@ export default class Agent extends Object {
     this.speed = 1;
 
     this.actionTimer = 0;
-    this.actionInterval = 1000;
+    this.actionInterval = 1;
   }
 
   update(deltaTime, batteryX, batteryY) {
@@ -33,7 +33,7 @@ export default class Agent extends Object {
       this.power = this.power -= this.skillLevel;
 
       this.actionTimer = 0;
-      this.actionInterval = 50;
+
     } else {
       this.actionTimer += deltaTime;
     }

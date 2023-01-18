@@ -33,7 +33,7 @@ export default class Game {
       this.batteries.forEach((battery) => {
         if (Object.clicked(x, y, battery)) {
           battery.markedForDeletion = true;
-          this.agent.power += 25;
+          this.agent.power += this.supply.gain * 10;
           this.clicks++;
         }
       });
@@ -41,7 +41,7 @@ export default class Game {
         if (Object.clicked(x, y, button)) {
           if (this.clicks > button.cost(this.supply.gain)) {
             this.clicks -= button.cost(this.supply.gain);
-            this.supply.gain *= this.supply.gain;
+            this.supply.gain *= 2;
           }
         }
       });
@@ -64,7 +64,7 @@ export default class Game {
     this.batteries.forEach((battery) => {
       if (Collision.check(this.agent, battery)) {
         battery.markedForDeletion = true;
-        this.supply.power + this.supply.gain * 10;
+        this.agent.power += this.supply.gain * 100;
       }
     });
 
