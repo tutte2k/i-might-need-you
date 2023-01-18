@@ -1,8 +1,14 @@
-
-
+* {
+  margin: 0;
+  padding: 0;
+}
+html {
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
 #container1 {
-    position: absolute;
-    max-width: 100%;
-    max-height: 100%;
-    overflow: hidden;
+  position: absolute;
+  max-width: 100%;
+  max-height: 100%;
+  overflow: hidden;
 }
