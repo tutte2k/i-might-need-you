@@ -68,6 +68,10 @@ export default class Game {
       });
     });
   }
+  calculateDistance(x1, x2, y1, y2) {
+    return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+  }
+
   update(deltaTime) {
     const autoClickElapsed =
       this.autoClickTimer > this.autoClickInterval && this.autoClick > 1;
@@ -91,7 +95,28 @@ export default class Game {
       this.spawnTimer += deltaTime;
     }
     if (this.batteries.length != 0) {
-      this.agent.update(deltaTime, this.batteries[0].x, this.batteries[0].y);
+      let closestBattery = this.batteries[0];
+      let closestDistance = this.calculateDistance(
+        this.agent.x,
+        this.batteries[0].x,
+        this.agent.y,
+        this.batteries[0].y
+      );
+
+      for (var i = 1; i < this.batteries.length; i++) {
+        var tempDist = calculateDistance(
+          agent.x,
+          this.batteries[i].x,
+          agent.y,
+          this.batteries[i].y
+        );
+        if (tempDist > closestDistance) {
+          closestDistance = tempDist;
+          closestBattery = this.batteries[i];
+        }
+      }
+
+      this.agent.update(deltaTime, closestDistance.x, closestDistance.y);
     }
     this.batteries.forEach((battery) => {
       if (Collision.check(this.agent, battery)) {
