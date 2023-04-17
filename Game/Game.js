@@ -105,9 +105,9 @@ export default class Game {
 
       for (var i = 1; i < this.batteries.length; i++) {
         var tempDist = this.calculateDistance(
-          agent.x,
+          this.agent.x,
           this.batteries[i].x,
-          agent.y,
+          this.agent.y,
           this.batteries[i].y
         );
         if (tempDist > closestDistance) {
