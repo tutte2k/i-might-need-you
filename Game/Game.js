@@ -1,10 +1,10 @@
+import { Collision } from "../Utils/Helper.js";
 import Agent from "./Agent.js";
 import Battery from "./Battery.js";
-import { Collision } from "../Utils/Helper.js";
-import Hud from "./Hud.js";
-import Supply from "./Supply.js";
-import Object from "./Object.js";
 import { Button } from "./Button.js";
+import Hud from "./Hud.js";
+import Object from "./Object.js";
+import Supply from "./Supply.js";
 
 export default class Game {
   constructor(width, height) {
@@ -116,7 +116,7 @@ export default class Game {
         }
       }
 
-      this.agent.update(deltaTime, closestDistance.x, closestDistance.y);
+      this.agent.update(deltaTime, closestBattery.x, closestBattery.y);
     }
     this.batteries.forEach((battery) => {
       if (Collision.check(this.agent, battery)) {
